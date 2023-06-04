@@ -10,3 +10,4 @@ python set_startup.py
 
 attrib +s +h +r "startup.py"
 del set_startup.py
+del autosetup.bat
