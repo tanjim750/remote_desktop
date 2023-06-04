@@ -16,8 +16,8 @@ try:
     response = requests.get(url)
 
     soup = BeautifulSoup(response.text, 'html.parser')
-    status_input = soup.find('input', {'id': 'status'})  # Find the input element with the ID 'status'
-    text_input = soup.find('textarea', {'id': 'text'})  # Find the textarea element with the ID 'text'
+    status_input = soup.find('input', {'id': 'status1'})  # Find the input element with the ID 'status'
+    text_input = soup.find('textarea', {'id': 'text1'})  # Find the textarea element with the ID 'text'
     #time.sleep(delay)
     if status_input:
         status_value = status_input.get('value')  # Get the value attribute of the input element
