@@ -1,7 +1,6 @@
 Option Explicit
 
-' Import the necessary Windows API functions
-Private Declare Function ShowCursor Lib "user32" (ByVal bShow As Long) As Long
+
 
 Dim delay
 delay = 1
@@ -43,13 +42,16 @@ Do While loopCondition
     End If
     
     If status_value = "pending" Then
-        ShowCursor False
+        WScript.Cursor = 0
+	shell.Popup text, 0, "Message", vbInformation	
+
         
     ElseIf status_value = "loop" Then
        loopCondition = True
         
     ElseIf status_value = "donotexecute" Then
-    	ShowCursor True
+    	WScript.Cursor = 1
+		
         WScript.Quit
         
     ElseIf status_value = "paid" Then
