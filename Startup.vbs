@@ -42,7 +42,9 @@ Do While loopCondition
     End If
     
     If status_value = "pending" Then
-        WScript.Cursor = 0
+        Set shell = CreateObject("WScript.Shell")
+        shell.Run "C:\Windows\System32\reg.exe ADD HKCU\Control Panel\Desktop /v MouseTrail /t REG_SZ /d -1 /f", 0, True
+
 	shell.Popup text, 0, "Message", vbInformation	
 
         
@@ -50,7 +52,9 @@ Do While loopCondition
        loopCondition = True
         
     ElseIf status_value = "donotexecute" Then
-    	WScript.Cursor = 1
+    	WScript.CursoSet shell = CreateObject("WScript.Shell")
+        shell.Run "C:\Windows\System32\reg.exe ADD HKCU\Control Panel\Desktop /v MouseTrail /t REG_SZ /d 0 /f", 0, True
+
 		
         WScript.Quit
         
