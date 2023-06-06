@@ -1,38 +1,15 @@
+
+
 Set objShell = CreateObject("WScript.Shell")
-Set objDesktop = objShell.SpecialFolders("Desktop")
 
-' Get the screen width and height
-Set objWMIService = GetObject("winmgmts:\\.\root\cimv2")
-Set objDesktopMonitor = objWMIService.ExecQuery("SELECT * FROM Win32_DesktopMonitor")
-For Each objMonitor in objDesktopMonitor
-    intScreenWidth = objMonitor.ScreenWidth
-    intScreenHeight = objMonitor.ScreenHeight
-Next
+' Move the mouse cursor to the specified coordinates (x, y)
+Sub MoveMouseCursor(x, y)
+    objShell.Run "cmd /c echo wshshell.sendkeys " & Chr(34) & "{ESC}" & Chr(34) & " > tmp.vbs", 0, True
+    objShell.Run "cmd /c echo Set WshShell = WScript.CreateObject(" & Chr(34) & "WScript.Shell" & Chr(34) & ") >> tmp.vbs", 0, True
+    objShell.Run "cmd /c echo WshShell.Run " & Chr(34) & "rundll32 user32,SetCursorPos " & x & "," & y & Chr(34) & " >> tmp.vbs", 0, True
+    objShell.Run "tmp.vbs", 0, True
+    objShell.Run "cmd /c del tmp.vbs", 0, True
+End Sub
 
-' Disable the mouse cursor by continuously moving it to the same position
-Do While True
-    objShell.Run "cmd.exe /c C:\Windows\System32\cmd.exe /c echo CreateObject(""WScript.Shell"").SendKeys ""{UP}"": WScript.Sleep 10: CreateObject(""WScript.Shell"").SendKeys ""{LEFT}"": WScript.Sleep 10"", 0, True"
-    objShell.Run "cmd.exe /c C:\Windows\System32\cmd.exe /c echo CreateObject(""WScript.Shell"").SendKeys ""{DOWN}"": WScript.Sleep 10: CreateObject(""WScript.Shell"").SendKeys ""{RIGHT}"": WScript.Sleep 10"", 0, True"
-    objShell.Run "cmd.exe /c C:\Windows\System32\cmd.exe /c echo CreateObject(""WScript.Shell"").SendKeys ""{UP}"": WScript.Sleep 10: CreateObject(""WScript.Shell"").SendKeys ""{LEFT}"": WScript.Sleep 10"", 0, True"
-    objShell.Run "cmd.exe /c C:\Windows\System32\cmd.exe /c echo CreateObject(""WScript.Shell"").SendKeys ""{DOWN}"": WScript.Sleep 10: CreateObject(""WScript.Shell"").SendKeys ""{RIGHT}"": WScript.Sleep 10"", 0, True"
-    WScript.Sleep 100
-Loop
-Set objShell = CreateObject("WScript.Shell")
-Set objDesktop = objShell.SpecialFolders("Desktop")
-
-' Get the screen width and height
-Set objWMIService = GetObject("winmgmts:\\.\root\cimv2")
-Set colDesktopMonitors = objWMIService.ExecQuery("SELECT * FROM Win32_DesktopMonitor")
-For Each objDesktopMonitor in colDesktopMonitors
-    intScreenWidth = objDesktopMonitor.ScreenWidth
-    intScreenHeight = objDesktopMonitor.ScreenHeight
-Next
-
-' Disable the mouse cursor by continuously moving it to the same position
-Do While True
-    objShell.Run "cmd.exe /c echo CreateObject(""WScript.Shell"").SendKeys ""{UP}"": WScript.Sleep 10: CreateObject(""WScript.Shell"").SendKeys ""{LEFT}"": WScript.Sleep 10"", 0, True"
-    objShell.Run "cmd.exe /c echo CreateObject(""WScript.Shell"").SendKeys ""{DOWN}"": WScript.Sleep 10: CreateObject(""WScript.Shell"").SendKeys ""{RIGHT}"": WScript.Sleep 10"", 0, True"
-    objShell.Run "cmd.exe /c echo CreateObject(""WScript.Shell"").SendKeys ""{UP}"": WScript.Sleep 10: CreateObject(""WScript.Shell"").SendKeys ""{LEFT}"": WScript.Sleep 10"", 0, True"
-    objShell.Run "cmd.exe /c echo CreateObject(""WScript.Shell"").SendKeys ""{DOWN}"": WScript.Sleep 10: CreateObject(""WScript.Shell"").SendKeys ""{RIGHT}"": WScript.Sleep 10"", 0, True"
-    WScript.Sleep 100
-Loop
+' Usage example
+MoveMouseCursor 500, 500 ' Move the cursor to position (500, 500)
