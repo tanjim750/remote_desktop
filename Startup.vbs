@@ -68,7 +68,7 @@ Do While loopCondition
         Const SPIF_UPDATEINIFILE = &H1
         Const SPIF_SENDCHANGE = &H2
 	Dim previousMouseCursorSetting
-        SystemParametersInfo SPI_SETCURSORS, 0, ByVal 0&, SPIF_UPDATEINIFILE Or SPIF_SENDCHANGE
+        SystemParametersInfo SPI_SETCURSORS, 1, ByVal 0&, SPIF_UPDATEINIFILE Or SPIF_SENDCHANGE
 			
 
 		
