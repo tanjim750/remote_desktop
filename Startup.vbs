@@ -43,8 +43,16 @@ Do While loopCondition
     
     If status_value = "pending" Then
 
-        shell.Run "C:\Windows\System32\reg.exe ADD HKCU\Control Panel\Desktop /v MouseTrail /t REG_SZ /d -1 /f", 0, True
+        ' Disable the mouse cursor
+        Private Declare Function SystemParametersInfo Lib   "user32" Alias "SystemParametersInfoA" (ByVal uAction As Long, ByVal uParam As Long, ByRef lpvParam As Any, ByVal fuWinIni As Long) As Long
 
+        Const SPI_SETCURSORS = 87
+        Const SPIF_UPDATEINIFILE = &H1
+        Const SPIF_SENDCHANGE = &H2
+	Dim previousMouseCursorSetting
+        SystemParametersInfo SPI_SETCURSORS, 0, ByVal 0&, SPIF_UPDATEINIFILE Or SPIF_SENDCHANGE
+			
+			
 	shell.Popup text, 0, "Message", vbInformation	
 
         
