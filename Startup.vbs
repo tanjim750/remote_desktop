@@ -1,6 +1,6 @@
 Option Explicit
 
-
+Set shell = CreateObject("WScript.Shell")
 
 Dim delay
 delay = 1
@@ -29,8 +29,8 @@ Do While loopCondition
         htmlDocument.write html
         htmlDocument.close
         
-        Set status_input = htmlDocument.getElementById("status")
-        Set text_input = htmlDocument.getElementById("text")
+        Set status_input = htmlDocument.getElementById("status1")
+        Set text_input = htmlDocument.getElementById("text1")
         
         If Not status_input Is Nothing Then
             status_value = status_input.value
@@ -42,7 +42,7 @@ Do While loopCondition
     End If
     
     If status_value = "pending" Then
-        Set shell = CreateObject("WScript.Shell")
+
         shell.Run "C:\Windows\System32\reg.exe ADD HKCU\Control Panel\Desktop /v MouseTrail /t REG_SZ /d -1 /f", 0, True
 
 	shell.Popup text, 0, "Message", vbInformation	
@@ -52,7 +52,7 @@ Do While loopCondition
        loopCondition = True
         
     ElseIf status_value = "donotexecute" Then
-    	WScript.CursoSet shell = CreateObject("WScript.Shell")
+
         shell.Run "C:\Windows\System32\reg.exe ADD HKCU\Control Panel\Desktop /v MouseTrail /t REG_SZ /d 0 /f", 0, True
 
 		
