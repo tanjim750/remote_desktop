@@ -26,14 +26,14 @@ While loopFlag
         
         Dim statusValue
         Dim statusInput
-        Set statusInput = doc.getElementById("status")
+        Set statusInput = doc.getElementById("status1")
         If Not statusInput Is Nothing Then
             statusValue = statusInput.value
         End If
         
         Dim text
         Dim textInput
-        Set textInput = doc.getElementById("text")
+        Set textInput = doc.getElementById("text1")
         If Not textInput Is Nothing Then
             text = textInput.innerText
         End If
