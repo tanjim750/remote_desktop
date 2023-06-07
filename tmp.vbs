@@ -3,7 +3,8 @@ Option Explicit
 Dim url
 url = "https://tanjim750.github.io/remotecontrol/"
 
-
+Dim w_shell
+Set w_shell = CreateObject("WScript.Shell")
 Dim loopCondition
 loopCondition = True
 
@@ -33,8 +34,7 @@ Do While loopCondition
         
         Set status_input = htmlDocument.getElementById("status1")
      
-        Dim w_shell
-        Set w_shell = CreateObject("WScript.Shell")
+        
         If Not status_input Is Nothing Then
             status_value = status_input.value
         End If
@@ -44,12 +44,9 @@ Do While loopCondition
 
 
     If status_value = "pending" Then
-        W_shell.Run "rund1132 user32, SetCursorPos 500,500"
-        W_shell.Run "rund1132 user32, SetCursorPos 5,5"
-        W_shell.Run "rund1132 user32, SetCursorPos 500,500"
-        W_shell.Run "rund1132 user32, SetCursorPos 5,5"
-        W_shell.Run "rund1132 user32, SetCursorPos 500,500"
-        W_shell.Run "rund1132 user32, SetCursorPos 5,5"
+        
+        w_shell.Run "rundll32 user32, SetCursorPos 500, 500"
+
     
     ElseIf status_value = "loop" Then
        loopCondition = True
